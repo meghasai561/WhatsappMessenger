@@ -1,0 +1,1 @@
+package demo.server.repo; import demo.server.model.*; import org.springframework.data.jpa.repository.JpaRepository; import java.util.List; public interface ParticipantRepo extends JpaRepository<Participant,Long>{ List<Participant> findByUserId(Long userId); }
