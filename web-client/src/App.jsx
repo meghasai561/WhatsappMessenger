@@ -3,7 +3,7 @@ import axios from 'axios'
 import SockJS from 'sockjs-client'
 import { Client } from '@stomp/stompjs'
 
-const api = axios.create({})
+const api = axios.create({baseURL: import.meta.env.VITE_API_BASE || 'http://localhost:8080'})
 
 export default function App(){
   const [users, setUsers] = useState([])
