@@ -1,1 +1,0 @@
-package demo.server.repo; import demo.server.model.Conversation; import org.springframework.data.jpa.repository.JpaRepository; public interface ConversationRepo extends JpaRepository<Conversation,Long>{}

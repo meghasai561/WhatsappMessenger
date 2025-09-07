@@ -2,48 +2,48 @@ package demo.server.service;
 
 import demo.server.model.*;
 import demo.server.repo.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ChatService {
-    private final MessageRepo messageRepo;
-    private final ConversationRepo conversationRepo;
-    private final ParticipantRepo participantRepo;
-    private final UserRepo userRepo;
+    private final UserRepository userRepo;
+    private final ConversationRepository convRepo;
+    private final ParticipantRepository partRepo;
+    private final MessageRepository msgRepo;
 
-    public ChatService(MessageRepo messageRepo, ConversationRepo conversationRepo, ParticipantRepo participantRepo, UserRepo userRepo) {
-        this.messageRepo = messageRepo;
-        this.conversationRepo = conversationRepo;
-        this.participantRepo = participantRepo;
-        this.userRepo = userRepo;
+    public User createUser(String username, String displayName) {
+        User u = User.builder().username(username).displayName(displayName).build();
+        return userRepo.save(u);
     }
 
-    @Transactional
-    public Message sendMessage(Long conversationId, Long senderId, String body, Message.ContentType contentType,
-                               Long attachmentId, String clientMsgId, Long inReplyTo, Long originalId, boolean e2ee) {
-        var conv = conversationRepo.findById(conversationId).orElseThrow();
-        var sender = userRepo.findById(senderId).orElseThrow();
-        var msg = Message.builder()
+    public Conversation createConversation(String type, List<Long> userIds) {
+        Conversation conv = Conversation.builder().type(type).build();
+        convRepo.save(conv);
+
+        for (Long uid : userIds) {
+            User u = userRepo.findById(uid).orElseThrow();
+            Participant p = Participant.builder().conversation(conv).user(u).build();
+            partRepo.save(p);
+        }
+        return conv;
+    }
+
+    public Message sendMessage(Long convId, Long senderId, String body, String contentType) {
+        Conversation conv = convRepo.findById(convId).orElseThrow();
+        User sender = userRepo.findById(senderId).orElseThrow();
+        Message m = Message.builder()
                 .conversation(conv)
                 .sender(sender)
                 .body(body)
                 .contentType(contentType)
-                .attachmentId(attachmentId)
-                .clientMsgId(clientMsgId)
-                .inReplyToMessageId(inReplyTo)
-                .originalMessageId(originalId)
-                .e2ee(e2ee)
-                .status(Message.Status.SENT)
+                .status("SENT")
                 .sentAt(Instant.now())
                 .build();
-        return messageRepo.save(msg);
-    }
-
-    public List<Message> getMessages(Long conversationId) {
-        return messageRepo.findByConversationIdOrderByIdAsc(conversationId);
+        return msgRepo.save(m);
     }
 }

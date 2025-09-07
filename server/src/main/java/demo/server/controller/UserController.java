@@ -1,27 +1,29 @@
 package demo.server.controller;
 
-import demo.server.dto.CreateUserRequest;
-import demo.server.dto.UserDto;
+import demo.server.dto.*;
 import demo.server.model.User;
-import demo.server.repo.UserRepo;
+import demo.server.repo.UserRepository;
+import demo.server.service.ChatService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
-    private final UserRepo userRepo;
-    public UserController(UserRepo userRepo){ this.userRepo = userRepo; }
+    private final ChatService chatService;
+    private final UserRepository userRepo;
 
     @PostMapping
-    public UserDto create(@RequestBody CreateUserRequest req){
-        var u = userRepo.save(User.builder().username(req.username()).displayName(req.displayName()).build());
-        return new UserDto(u.getId(), u.getUsername(), u.getDisplayName());
+    public UserDto createUser(@RequestBody CreateUserRequest req) {
+        User u = chatService.createUser(req.getUsername(), req.getDisplayName());
+        return Mappers.toDto(u);
     }
 
     @GetMapping
-    public List<UserDto> all(){
-        return userRepo.findAll().stream().map(u-> new UserDto(u.getId(), u.getUsername(), u.getDisplayName())).toList();
+    public List<UserDto> allUsers() {
+        return userRepo.findAll().stream().map(Mappers::toDto).toList();
     }
 }

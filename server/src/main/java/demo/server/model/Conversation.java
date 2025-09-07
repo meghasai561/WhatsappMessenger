@@ -2,19 +2,21 @@ package demo.server.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.Instant;
-import java.util.Set;
 
-@Entity @Data @NoArgsConstructor @AllArgsConstructor @Builder
+import java.util.List;
+
+@Entity
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Conversation {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private Type type;
+    private String type; // DIRECT or GROUP
 
-    private String title;
-    private Instant createdAt;
-
-    public enum Type { DIRECT, GROUP }
+    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
+    private List<Participant> participants;
 }
