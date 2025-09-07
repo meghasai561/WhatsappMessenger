@@ -7,10 +7,11 @@ export default defineConfig({
     port: 5173,
     host: true,
     proxy: {
-      '/users': { target: 'http://localhost:8080', changeOrigin: true },
-      '/conversations': { target: 'http://localhost:8080', changeOrigin: true },
-      '/media': { target: 'http://localhost:8080', changeOrigin: true },
-      '/ws': { target: 'http://localhost:8080', ws: true, changeOrigin: true }
+      '/users': { target: 'https://shiny-guacamole-jp5jqrv7xj43pjq9-8080.app.github.dev', changeOrigin: true },
+      '/conversations': { target: 'https://shiny-guacamole-jp5jqrv7xj43pjq9-8080.app.github.dev', changeOrigin: true },
+      '/media': { target: 'https://shiny-guacamole-jp5jqrv7xj43pjq9-8080.app.github.dev', changeOrigin: true },
+      '/api': {target:'https://shiny-guacamole-jp5jqrv7xj43pjq9-8080.app.github.dev',changeOrigin: true,secure: false},
+      '/ws': { target: 'wss://shiny-guacamole-jp5jqrv7xj43pjq9-8080.app.github.dev',changeOrigin: true,secure: false}
     }
   },
   define: {
