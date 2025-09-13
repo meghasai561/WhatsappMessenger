@@ -3,7 +3,7 @@ import axios from 'axios'
 import SockJS from 'sockjs-client'
 import { Client } from '@stomp/stompjs'
 
-const api = axios.create({baseURL: import.meta.env.VITE_API_BASE || 'http://localhost:8080'})
+const api = axios.create({baseURL: import.meta.env.VITE_API_BASE})
 
 export default function App(){
   const [users, setUsers] = useState([])
@@ -18,7 +18,7 @@ export default function App(){
 
   useEffect(()=>{ (async ()=>{
     try {
-      const u = await api.get('/users')
+      const u = await api.get('api/users')
       setUsers(u.data)
     } catch(e) {
       console.error('Failed to load users', e)
@@ -30,7 +30,7 @@ export default function App(){
     if(!username) return
     const displayName = prompt('display name? (optional)') || username
     try {
-      const res = await api.post('/users', { username, displayName })
+      const res = await api.post('api/users', { username, displayName })
       setMe(res.data)
       setUsers(prev => [...prev, res.data])
     } catch(e){
@@ -45,7 +45,7 @@ export default function App(){
     const ids = idsStr.split(',').map(s=>parseInt(s.trim())).filter(Boolean)
     const type = isGroup ? 'GROUP' : 'DIRECT'
     try {
-      const res = await api.post('/conversations', { type, participantUserIds: ids, title: isGroup?prompt('Group title?'):null })
+      const res = await api.post('api/conversations', { type, participantUserIds: ids, title: isGroup?prompt('Group title?'):null })
       setConversations(prev => [...prev, res.data])
     } catch(e) {
       alert('Create conversation failed: '+ (e?.response?.data || e.message))
@@ -54,7 +54,7 @@ export default function App(){
 
   async function loadConversations(){
     try {
-      const res = await api.get('/conversations')
+      const res = await api.get('api/conversations')
       setConversations(res.data)
     } catch(e) {
       console.error('Load convs failed', e)
@@ -89,7 +89,7 @@ export default function App(){
   async function openConversation(c){
     setCurrent(c)
     try {
-      const res = await api.get(`/conversations/${c.id}/messages`)
+      const res = await api.get(`api/conversations/${c.id}/messages`)
       setMessages(res.data)
       connectWS(c.id)
     } catch(e){
@@ -106,7 +106,7 @@ export default function App(){
       const form = new FormData()
       form.append('file', file)
       try {
-        const upload = await api.post('/media', form, { headers: { 'Content-Type':'multipart/form-data' } })
+        const upload = await api.post('api/media', form, { headers: { 'Content-Type':'multipart/form-data' } })
         attachmentId = upload.data.id
       } catch(e){
         alert('File upload failed: '+ (e?.response?.data || e.message))
@@ -123,7 +123,7 @@ export default function App(){
     }
 
     try {
-      const res = await api.post(`/conversations/${current.id}/messages?senderUserId=${me.id}`, payload)
+      const res = await api.post(`api/conversations/${current.id}/messages?senderUserId=${me.id}`, payload)
       setMessages(prev => [...prev, res.data])
       setText('')
       setFile(null)
@@ -137,7 +137,7 @@ export default function App(){
     const convId = prompt('Forward to conversation id?')
     if(!convId) return
     try {
-      await api.post(`/conversations/${convId}/messages?senderUserId=${me.id}`, {
+      await api.post(`api/conversations/${convId}/messages?senderUserId=${me.id}`, {
         clientMsgId: crypto.randomUUID ? crypto.randomUUID() : (Date.now()+'-'+Math.random()),
         body: msg.body,
         contentType: msg.contentType,
