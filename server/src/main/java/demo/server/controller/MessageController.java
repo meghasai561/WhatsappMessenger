@@ -7,6 +7,10 @@ import demo.server.model.Message;
 import demo.server.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import demo.server.model.Conversation;
+import demo.server.repo.ConversationRepository;
+import demo.server.repo.MessageRepository;
+import java.util.List;
 
 @RestController
 @RequestMapping("/messages")
