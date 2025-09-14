@@ -19,4 +19,8 @@ public class Conversation {
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
     private List<Participant> participants;
+
+    @OneToMany(mappedBy = "conversation")
+    @JsonManagedReference // Paired with JsonBackReference
+    private List<Message> messages;
 }
