@@ -46,4 +46,8 @@ public class ChatService {
                 .build();
         return msgRepo.save(m);
     }
+
+    public List<Conversation> getAllConversations() {
+    return convRepo.findAll();
+}
 }

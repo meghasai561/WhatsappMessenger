@@ -16,4 +16,9 @@ public class ConversationController {
     public Conversation create(@RequestBody CreateConversationRequest req) {
         return chatService.createConversation(req.getType(), req.getParticipantIds());
     }
+
+    @GetMapping
+    public List<Conversation> getAllConversations() {
+        return chatService.getAllConversations();
+    }
 }
