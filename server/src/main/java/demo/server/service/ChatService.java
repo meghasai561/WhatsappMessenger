@@ -7,6 +7,14 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.transaction.Transactional;
+import java.lang.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +32,12 @@ public class ChatService {
     public Conversation createConversation(String type, List<Long> userIds) {
         Conversation conv = Conversation.builder().type(type).build();
         convRepo.save(conv);
+
+        if (userIds == null || userIds.isEmpty()) {
+            
+            throw new IllegalArgumentException("participantIds must not be null or empty");
+
+        }
 
         for (Long uid : userIds) {
             User u = userRepo.findById(uid).orElseThrow();
