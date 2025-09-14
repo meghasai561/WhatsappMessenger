@@ -18,7 +18,7 @@ export default function App(){
 
   useEffect(()=>{ (async ()=>{
     try {
-      const u = await api.get('api/users')
+      const u = await api.get('users')
       setUsers(u.data)
     } catch(e) {
       console.error('Failed to load users', e)
@@ -30,7 +30,7 @@ export default function App(){
     if(!username) return
     const displayName = prompt('display name? (optional)') || username
     try {
-      const res = await api.post('api/users', { username, displayName })
+      const res = await api.post('users', { username, displayName })
       setMe(res.data)
       setUsers(prev => [...prev, res.data])
     } catch(e){

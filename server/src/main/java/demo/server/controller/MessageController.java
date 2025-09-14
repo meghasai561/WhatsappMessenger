@@ -24,4 +24,11 @@ public class MessageController {
         );
         return Mappers.toDto(m);
     }
+    @GetMapping("/conversation/{conversationId}")
+    public List<Message> getMessagesByConversation(@PathVariable Long conversationId) {
+        Conversation conversation = conversationRepo.findById(conversationId)
+                .orElseThrow(() -> new RuntimeException("Conversation not found"));
+
+        return messageRepo.findByConversationOrderByTimestampAsc(conversation);
+    }
 }
