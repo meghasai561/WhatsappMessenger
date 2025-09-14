@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/conversations")
 public class ConversationController {
     @Autowired
-    private final ChatService chatService;
+    private ChatService chatService;
 
     @PostMapping
     public Conversation create(@RequestBody CreateConversationRequest req) {
