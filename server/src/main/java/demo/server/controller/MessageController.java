@@ -6,6 +6,7 @@ import demo.server.dto.Mappers;
 import demo.server.model.Message;
 import demo.server.service.ChatService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 @RequestMapping("/messages")

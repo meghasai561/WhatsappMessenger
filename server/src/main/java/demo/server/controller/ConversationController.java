@@ -3,13 +3,13 @@ package demo.server.controller;
 import demo.server.dto.CreateConversationRequest;
 import demo.server.model.Conversation;
 import demo.server.service.ChatService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/conversations")
-@RequiredArgsConstructor
 public class ConversationController {
+    @Autowired
     private final ChatService chatService;
 
     @PostMapping
