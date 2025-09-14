@@ -49,5 +49,11 @@ public class ChatService {
 
     public List<Conversation> getAllConversations() {
     return convRepo.findAll();
-}
+    }
+
+    public List<Message> getMessagesByConversation(Long conversationId) {
+        Conversation conversation = convRepo.findById(conversationId)
+            .orElseThrow(() -> new RuntimeException("Conversation not found"));
+        return msgRepo.findByConversationOrderBySentAtAsc(conversation);
+    }
 }

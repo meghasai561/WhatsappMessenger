@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByConversation(Conversation conversation);
+    List<Message> findByConversationOrderBySentAtAsc(Conversation conversation);
 }
