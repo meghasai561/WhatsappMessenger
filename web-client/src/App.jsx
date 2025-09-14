@@ -42,10 +42,10 @@ export default function App(){
     const isGroup = window.confirm('OK = GROUP, Cancel = DIRECT')
     const idsStr = prompt('Participant user IDs comma-separated (include your user id)')
     if(!idsStr) return
-    const ids = idsStr.split(',').map(s=>parseInt(s.trim())).filter(Boolean)
+    const ids = idsStr.split(',').map(s => Number(s.trim())).filter(n => !isNaN(n) && n > 0)
     const type = isGroup ? 'GROUP' : 'DIRECT'
     try {
-      const res = await api.post('conversations', { type, participantUserIds: ids, title: isGroup?prompt('Group title?'):null })
+      const res = await api.post('conversations', { type, participantIds: ids, title: isGroup?prompt('Group title?'):null })
       setConversations(prev => [...prev, res.data])
     } catch(e) {
       alert('Create conversation failed: '+ (e?.response?.data || e.message))
